@@ -1,5 +1,5 @@
 """
-URL configuration for exer_proj project.
+URL configuration for generate_exercises project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.2/topics/http/urls/
