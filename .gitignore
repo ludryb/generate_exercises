@@ -1,0 +1,9 @@
+app/__pycache__/
+app/migrations/
+app/generate_exercises/__pycache__/
+/en_ewt_models/
+en_ewt_models/en_ewt_lemmatizer.pt
+en_ewt_models/en_ewt_parser.pt
+en_ewt_models/en_ewt_tagger.pt
+en_ewt_models/en_ewt_tokenizer.pt
+en_ewt_models/en_ewt.pretrain.pt

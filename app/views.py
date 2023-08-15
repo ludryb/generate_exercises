@@ -10,24 +10,44 @@ import requests
 from django.http import HttpResponse
 import nltk
 from nltk.corpus import wordnet
+import stanfordnlp
+
+
 
 nltk.download('wordnet')
+stanfordnlp.download('en')
 nlp = en_core_web_sm.load()
 word2vec_model = api.load('glove-wiki-gigaword-100')
 
+
+
+
+
+
 def generate_exercise_1(text):
-    doc = nlp(text)
-    sentences = [sent.text for sent in doc.sents]
-    selected_sentence = random.choice(sentences)
-    while len(selected_sentence.split()) >= 8:
-        selected_sentence = random.choice(sentences)
+    # doc = nlp(text)
+    # selected_sentence = [sent.text for sent in doc.sents]
+    # while len(selected_sentence.split()) >= 8:
+    #     selected_sentence = random.choice(sentences)
+    # options = generate_wrong_sentences(selected_sentence)
+    
+
+    nlp_stanford = stanfordnlp.Pipeline()
+    doc_nlp = nlp_stanford(text)
+
+    sentences = doc_nlp.sentences[random.randint(1, len(doc_nlp))]
+    if len(sentences) >= 8:
+        sentences = doc_nlp.sentences[random.randint(1, len(doc_nlp))]
+    selected_sentence = ' '.join([word.text for word in sentences.words])
     options = generate_wrong_sentences(selected_sentence)
+
+
     return {'answer': selected_sentence, 'options': options}
 
 
 def generate_wrong_sentences(sentence):
-    # translator = str.maketrans("", "", string.punctuation)
-    # sentence_punct = sentence.translate(translator)
+    # if sentence.count('"') == 1:
+    #     sentence = sentence.replace('"', '')
     unique_sentences = set()
     unique_sentences.add(sentence)
     words = sentence.split()
@@ -54,9 +74,8 @@ def generate_exercise_2(text):
 
 def generate_wrong_words(verb):
     wrong_words = [verb]
-
     # Generate wrong words using word2vec model
-    word_vector = word2vec_model[verb]
+    word_vector = word2vec_model[verb.lower()]
     for _ in range(3):
         similar_words = word2vec_model.similar_by_vector(word_vector, topn=5)
         random_word = random.choice(similar_words)[0]
@@ -151,7 +170,7 @@ def exercises(request):
             request.session['exercise_2_answer'] = exercise_2['answer']
             request.session['exercise_3_answer'] = exercise_3['answer']
             request.session['exercise_4_answer'] = exercise_4['answer']
-            print(request.session['exercise_4_answer'])
+            # print(request.session['exercise_4_answer'])
             return render(request, 'exercises.html', 
                           {'exercise_1': exercise_1, 
                            'exercise_2': exercise_2, 

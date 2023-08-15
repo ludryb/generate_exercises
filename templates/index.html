@@ -2,12 +2,58 @@
 <html>
 <head>
     <title>Exercise Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 80vh;
+            margin: 0;
+            background-color: #f0f0f0; 
+        }
+        .container {
+            text-align: center;
+            margin-top: 100px;
+        }
+        .title {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        .upload-form {
+            width: 300px;
+            margin: 0 auto;
+        }
+        .upload-input {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .upload-button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-    <h1>Exercise Generator</h1>
-    <form action="/exercises" method="post" enctype="multipart/form-data">
-        <input type="file" name="file">
-        <input type="submit" value="Generate Exercises">
-    </form>
+    <div class="container">
+        <h1 class="title">Exercise Generator</h1>
+        <form class="upload-form" action="/exercises" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input class="upload-input" type="file" name="file" accept=".txt">
+            <button class="upload-button" type="submit">Generate Exercises</button>
+        </form>
+    </div>
 </body>
 </html>
