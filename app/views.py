@@ -26,18 +26,19 @@ word2vec_model = api.load('glove-wiki-gigaword-100')
 
 def generate_exercise_1(text):
     # doc = nlp(text)
-    # selected_sentence = [sent.text for sent in doc.sents]
+    # sentences = [sent.text for sent in doc.sents]
+    # selected_sentence = random.choice(sentences)
     # while len(selected_sentence.split()) >= 8:
     #     selected_sentence = random.choice(sentences)
     # options = generate_wrong_sentences(selected_sentence)
     
 
-    nlp_stanford = stanfordnlp.Pipeline()
+    nlp_stanford = stanfordnlp.Pipeline(processors='tokenize', lang='en')
     doc_nlp = nlp_stanford(text)
-
-    sentences = doc_nlp.sentences[random.randint(1, len(doc_nlp))]
-    if len(sentences) >= 8:
-        sentences = doc_nlp.sentences[random.randint(1, len(doc_nlp))]
+    sentences = doc_nlp.sentences[random.randint(0, len(doc_nlp.sentences)-1)]
+    while len(sentences.words) >= 10:
+        sentences = doc_nlp.sentences[random.randint(0, 
+                                                     len(doc_nlp.sentences)-1)]
     selected_sentence = ' '.join([word.text for word in sentences.words])
     options = generate_wrong_sentences(selected_sentence)
 
