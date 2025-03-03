@@ -1,22 +1,20 @@
-from django.shortcuts import render, redirect
-import en_core_web_sm
-#import pyinflect
-import gensim.downloader as api
-import random
-#import numpy as np
-import string
-# from PyDictionary import PyDictionary
-import requests
-from django.http import HttpResponse
 import nltk
-from nltk.corpus import wordnet
+# import spacy
+import random
+import string
+import requests
 import stanfordnlp
+import en_core_web_trf
+import gensim.downloader as api
+
+from nltk.corpus import wordnet
+from django.http import HttpResponse
+from django.shortcuts import render
 
 
-
-nltk.download('wordnet')
-stanfordnlp.download('en')
-nlp = en_core_web_sm.load()
+# nltk.download('wordnet')
+# stanfordnlp.download('en')
+nlp = en_core_web_trf.load()
 word2vec_model = api.load('glove-wiki-gigaword-100')
 
 

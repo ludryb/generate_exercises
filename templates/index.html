@@ -1,48 +1,91 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Exercise Generator</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
         body {
-            font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 80vh;
-            margin: 0;
-            background-color: #f0f0f0; 
+            height: 100vh;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #fff;
         }
         .container {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 35px;
+            border-radius: 12px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
             text-align: center;
-            margin-top: 100px;
+            max-width: 450px;
+            width: 100%;
         }
         .title {
-            font-size: 36px;
+            font-size: 28px;
             margin-bottom: 20px;
+            font-weight: 700;
         }
         .upload-form {
-            width: 300px;
-            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .upload-label {
+            background: rgba(255, 255, 255, 0.3);
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            font-size: 16px;
+        }
+        .upload-label:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(1.02);
         }
         .upload-input {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            display: none;
+        }
+        .file-name {
             font-size: 16px;
+            color: #fff;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.3);
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+        .file-name:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(1.02);
         }
         .upload-button {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            color: #fff;
+            padding: 12px;
+            background: #ff9800;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             font-size: 16px;
+            color: #fff;
             cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+        .upload-button:hover {
+            background: #e68900;
+            transform: scale(1.05);
+        }
+        .file-format {
+            font-size: 14px;
+            color: #fff;
+            opacity: 0.8;
         }
     </style>
 </head>
@@ -51,9 +94,18 @@
         <h1 class="title">Exercise Generator</h1>
         <form class="upload-form" action="/exercises" method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            <input class="upload-input" type="file" name="file" accept=".txt">
+            <label for="file-upload" class="file-name" id="file-name">Click to select a file</label>
+            <input class="upload-input" id="file-upload" type="file" name="file" accept=".txt">
+            <span class="file-format">Supported format: .txt</span>
             <button class="upload-button" type="submit">Generate Exercises</button>
         </form>
     </div>
+    <script>
+        document.getElementById('file-upload').addEventListener('change', function() {
+            var fileName = this.files[0] ? this.files[0].name : "Click to select a file";
+            document.getElementById('file-name').textContent = fileName;
+        });
+    </script>
 </body>
 </html>
+

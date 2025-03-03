@@ -1,88 +1,217 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generated Exercises</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #fff;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            border-radius: 12px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.3);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            transition: background 0.3s, transform 0.2s;
+        }
+        .card:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(1.02);
+        }
+        .card-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .form-control {
+            padding: 10px;
+            border-radius: 6px;
+            border: none;
+            font-size: 16px;
+        }
+        .btn {
+            padding: 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            display: inline-block;
+        }
+        .btn-primary {
+            background: #ff9800;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: #e68900;
+            transform: scale(1.05);
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="mt-5 mb-4">Generated Exercises</h1>
-
-        <div class="card mb-4">
-            <div class="card-body">
-                <h2 class="card-title">Exercise 1: Choose the Correct Sentence</h2>
-                <form method="post" action="{% url 'check_exercise_1' %}">
-                    {% csrf_token %}
-                    {% for option in exercise_1.options %}
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="answer_1" value="{{ option }}" id="{{ option }}">
-                        <label class="form-check-label" for="{{ option }}">{{ option }}</label>
-                    </div>
-                    {% endfor %}
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
-            </div>
-        </div>
+        <h1 class="text-center">Generated Exercises</h1>
         
-
-        <div class="card mb-4">
-            <div class="card-body">
-                <h2 class="card-title">Exercise 2: Choose the Correct Word</h2>
-                <p class="card-text">Find the correct verb:</p>
-                <p class="card-text">{{ exercise_2.sentence }}</p>
-                <form method="post" action="{% url 'check_exercise_2' %}">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <select class="form-control" name="answer_2" id="answer">
-                            <option value="">Choose an option</option>
-                            {% for option in exercise_2.options %}
-                            <option value="{{ option }}">{{ option }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
-            </div>
+        <!-- Exercise 1 -->
+        <div class="card">
+            <h2 class="card-title">Exercise 1: Choose the Correct Sentence</h2>
+            <form id="exercise-1" data-correct-answer="{{ exercise_1.answer }}">
+                {% for option in exercise_1.options %}
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="answer_1" value="{{ option }}" id="option_{{ forloop.counter }}">
+                    <label class="form-check-label" for="option_{{ forloop.counter }}">{{ option }}</label>
+                </div>
+                {% endfor %}
+                <button type="button" class="btn btn-primary" onclick="checkExercise('exercise-1')">Submit</button>
+                <p class="result-message"></p>
+            </form>
         </div>
 
-        <div class="card mb-4">
-            <div class="card-body">
-                <h2 class="card-title">Exercise 3: Rearrange the Word</h2>
-                <p class="card-text">Reorder the letters of the word. The first letter is already provided.</p>
-                <p class="card-text">{{ exercise_3.sentence | safe}}</p>
-                <p class="card-text">Guess the word:</p>
-                <p class="card-text"><strong>{{ exercise_3.clue }}</strong></p>
-                <form method="post" action="{% url 'check_exercise_3' %}">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label for="input_answer">Enter your answer:</label>
-                        <input type="text" class="form-control" name="answer_3" id="input_answer">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
-            </div>
+        <!-- Exercise 2 -->
+        <div class="card">
+            <h2 class="card-title">Exercise 2: Choose the Correct Word</h2>
+            <p class="card-text">{{ exercise_2.sentence }}</p>
+            <form id="exercise-2" data-correct-answer="{{ exercise_2.answer }}">
+                <select class="form-control" name="answer_2" id="answer_2">
+                    <option value="">Choose an option</option>
+                    {% for option in exercise_2.options %}
+                    <option value="{{ option }}">{{ option }}</option>
+                    {% endfor %}
+                </select>
+                <button type="button" class="btn btn-primary" onclick="checkExercise('exercise-2')">Submit</button>
+                <p class="result-message"></p>
+            </form>
         </div>
 
-        <div class="card mb-4">
-            <div class="card-body">
-                <h2 class="card-title">Exercise 4: Rearrange the Sentence</h2>
-                <p class="card-text">Reorder the words to form a sentence.</p>
-                <!-- <p class="card-text">Answer: {{ exercise_4.question }}</p> -->
-                <p class="card-text">Question: {{ exercise_4.sentence }}</p>
-                <form method="post" action="{% url 'check_exercise_4' %}">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label for="input_sentence">Arrange the words:</label>
-                        <input type="text" class="form-control" name="answer_4" id="input_sentence">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
-            </div>
+        <!-- Exercise 3 -->
+        <div class="card">
+            <h2 class="card-title">Exercise 3: Rearrange the Word</h2>
+            <p class="card-text">{{ exercise_3.sentence | safe }}</p>
+            {% if exercise_3.clue %}
+                <p class="card-text">Hint: {{ exercise_3.clue }}</p>
+            {% endif %}
+            <form id="exercise-3" data-correct-answer="{{ exercise_3.answer }}">
+                <input type="text" class="form-control" name="answer_3">
+                <button type="button" class="btn btn-primary" onclick="checkExercise('exercise-3')">Submit</button>
+                <p class="result-message"></p>
+            </form>
         </div>
+
+        <!-- Exercise 4 -->
+        <!-- Заготовка под драг анд дроп -->
+        <!-- <div class="card">
+            <h2 class="card-title">Exercise 4: Rearrange the Sentence</h2>
+            <p class="card-text">Reorder the words to form a sentence.</p>
+            <p class="card-text">Question: {{ exercise_4.sentence }}</p>
+            <div id="word-bank"></div>
+            <div id="drop-zone" class="drop-zone" data-correct-answer="{{ exercise_4.answer }}"></div>
+            <button type="button" class="btn btn-primary" onclick="checkExercise('drop-zone')">Submit</button>
+            <p class="result-message"></p>
+        </div> -->
+        <div class="card">
+            <h2 class="card-title">Exercise 4: Rearrange the Sentence</h2>
+            <p class="card-text">Reorder the words to form a sentence.</p>
+            <p class="card-text">Question: {{ exercise_4.sentence }}</p>
+            <form id="exercise-4" data-correct-answer="{{ exercise_4.answer }}">
+                <input type="text" class="form-control" name="answer_4">
+                <button type="button" class="btn btn-primary" onclick="checkExercise('exercise-4')">Submit</button>
+                <p class="result-message"></p>
+            </form>
+        </div>
+
+        <script>
+            function checkExercise(exerciseId) {
+                let form = document.getElementById(exerciseId);
+                let correctAnswer = form.getAttribute("data-correct-answer").trim();
+                let resultMessage = form.querySelector(".result-message");
+                let userAnswer = "";
+        
+                if (exerciseId === "exercise-1") {
+                    let selected = form.querySelector("input[type=radio]:checked");
+                    if (selected) {
+                        userAnswer = selected.value.trim();
+                    }
+                } else if (exerciseId === "exercise-2") {
+                    userAnswer = form.querySelector("select").value.trim();
+                } else if (exerciseId === "exercise-3") {
+                    userAnswer = form.querySelector("input[type=text]").value.trim();
+                } else if (exerciseId === "exercise-4") {
+                    userAnswer = form.querySelector("input[type=text]").value.trim();
+                }
+        
+                let isCorrect = userAnswer.toLowerCase() === correctAnswer.toLowerCase();
+                resultMessage.textContent = isCorrect ? "Correct!" : "Incorrect. Try again.";
+                form.style.backgroundColor = isCorrect ? "#4CAF50" : "#ff4d4d";
+            }
+            // // Drag & Drop for Exercise 4
+            // const words = "{{ exercise_4.sentence }}".split(" ").sort(() => Math.random() - 0.5);
+            // const wordBank = document.getElementById("word-bank");
+            // const dropZone = document.getElementById("drop-zone");
+
+            // words.forEach(word => {
+            //     let wordElement = document.createElement("div");
+            //     wordElement.textContent = word;
+            //     wordElement.classList.add("draggable");
+            //     wordElement.draggable = true;
+            //     wordElement.addEventListener("dragstart", dragStart);
+            //     wordBank.appendChild(wordElement);
+            // });
+
+            // dropZone.addEventListener("dragover", dragOver);
+            // dropZone.addEventListener("drop", drop);
+
+            // function dragStart(event) {
+            //     event.dataTransfer.setData("text", event.target.textContent);
+            // }
+
+            // function dragOver(event) {
+            //     event.preventDefault();
+            // }
+
+            // function drop(event) {
+            //     event.preventDefault();
+            //     const word = event.dataTransfer.getData("text");
+            //     const wordElement = document.createElement("div");
+            //     wordElement.textContent = word;
+            //     wordElement.classList.add("draggable");
+            //     dropZone.appendChild(wordElement);
+            // }
+        </script>
+        
+        <style>
+            .drop-zone {
+                display: flex;
+                flex-wrap: wrap;
+                padding: 10px;
+                min-height: 50px;
+                background: rgba(255, 255, 255, 0.3);
+                border-radius: 6px;
+                margin-top: 10px;
+            }
+        </style>
+
+    
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
